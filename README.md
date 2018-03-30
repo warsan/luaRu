@@ -3,50 +3,69 @@ Lua Ru 5.3.4 Русификация Lua, русские переменные, и
 
 исправленный файлы lctype.h и llex.c
 
-== Русские синонимы англоязычных ключевых слов==
+== Русские синонимы англоязычных ключевых слов ==
+(в скобках не реализованные варианты)
 
-and - 
+and - и
 
-break -
+break - стоп 
 
-do -
+do - начало (делать ?)
 
-else -
+else - иначе
 
-elseif -
+elseif - иначеесли
 
-end -
+end - всё (конец ?)
 
-false -
+false - ложь (+ нет) 
 
-for -
+for - для
 
-function -
+function - функция
 
-goto
+goto - идина (перейти_к, выполнить_с ?)
 
-if
+if - если 
 
-in
+in - в 
 
-local
+local - локал
 
-nil
+nil - нуль (пусто ?) 
 
-not
+not - не 
 
-or
+or - или
 
-repeat
+repeat - повторять (повторить)
 
-return
+return - возврат (вернутся)
 
-then
+then - тогда
 
-true
+true - истина (да)
 
-until
+until - покуда (?)
 
-while
+while - пока
+
+--- Из llex.c---
+* ORDER RESERVED */
+static const char *const luaX_tokens [] = {
+    "and", "break", "do", "else", "elseif",
+    "end", "false", "for", "function", "goto", "if",
+    "in", "local", "nil", "not", "or", "repeat",
+    "return", "then", "true", "until", "while",
+    "//", "..", "...", "==", ">=", "<=", "~=",
+    "<<", ">>", "::", "<eof>",
+    "<number>", "<integer>", "<name>", "<string>"
+};
+static const char *const luaX_tokens_cyr [] = {
+    "и", "стоп", "начало", "иначе", "иначеесли",
+    "все", "ложь", "для", "функция", "идина", "если",
+    "в", "локал", "нуль", "не", "или", "повторять",
+    "возврат", "тогда", "истина", "покуда", "пока"
+};
 
 ==Как скомпилировать исходники==
