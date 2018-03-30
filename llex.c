@@ -1,5 +1,5 @@
 /*
-** $Id: llex.c,v 2.100 2018/02/23 13:13:31 roberto Exp roberto $
+** $Id: llex.c,v 2.96 2016/05/02 14:02:12 roberto Exp $
 ** Lexical Analyzer
 ** See Copyright Notice in lua.h
 */
@@ -41,10 +41,16 @@ static const char *const luaX_tokens [] = {
     "and", "break", "do", "else", "elseif",
     "end", "false", "for", "function", "goto", "if",
     "in", "local", "nil", "not", "or", "repeat",
-    "return", "then", "true", "undef", "until", "while",
+    "return", "then", "true", "until", "while",
     "//", "..", "...", "==", ">=", "<=", "~=",
     "<<", ">>", "::", "<eof>",
     "<number>", "<integer>", "<name>", "<string>"
+};
+static const char *const luaX_tokens_cyr [] = {
+    "и", "стоп", "начало", "иначе", "иначеесли",
+    "все", "ложь", "для", "функция", "идина", "если",
+    "в", "локал", "нуль", "не", "или", "повторять",
+    "возврат", "тогда", "истина", "покуда", "пока"
 };
 
 
@@ -63,7 +69,7 @@ static void save (LexState *ls, int c) {
     newsize = luaZ_sizebuffer(b) * 2;
     luaZ_resizebuffer(ls->L, b, newsize);
   }
-  b->buffer[luaZ_bufflen(b)++] = cast_char(c);
+  b->buffer[luaZ_bufflen(b)++] = cast(char, c);
 }
 
 
@@ -76,6 +82,16 @@ void luaX_init (lua_State *L) {
     luaC_fix(L, obj2gco(ts));  /* reserved words are never collected */
     ts->extra = cast_byte(i+1);  /* reserved word */
   }
+
+  TString *e2 = luaS_newliteral(L, "_ОКР");  /* create env name */
+  luaC_fix(L, obj2gco(e2));  /* never collect this name */
+  for (i=0; i<22; i++) {
+    TString *ts = luaS_new(L, luaX_tokens_cyr[i]);
+    luaC_fix(L, obj2gco(ts));  /* reserved words are never collected */
+    ts->extra = cast_byte(i+1);  /* reserved word */
+  }
+
+
 }
 
 
@@ -129,15 +145,15 @@ TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
   TValue *o;  /* entry for 'str' */
   TString *ts = luaS_newlstr(L, str, l);  /* create new string */
   setsvalue2s(L, L->top++, ts);  /* temporarily anchor it in stack */
-  o = luaH_set(L, ls->h, s2v(L->top - 1));
-  if (isempty(o)) {  /* not in use yet? */
+  o = luaH_set(L, ls->h, L->top - 1);
+  if (ttisnil(o)) {  /* not in use yet? */
     /* boolean value does not need GC barrier;
-       table is not a metatable, so it does not need to invalidate cache */
+       table has no metatable, so it does not need to invalidate cache */
     setbvalue(o, 1);  /* t[string] = true */
     luaC_checkGC(L);
   }
   else {  /* string already present */
-    ts = keystrval(nodefromval(o));  /* re-use value previously stored */
+    ts = tsvalue(keyfromval(o));  /* re-use value previously stored */
   }
   L->top--;  /* remove string from stack */
   return ts;
@@ -526,6 +542,7 @@ static int llex (LexState *ls, SemInfo *seminfo) {
           do {
             save_and_next(ls);
           } while (lislalnum(ls->current));
+			// printf("\nluaX_newstring: \"%.*s\"\n", luaZ_bufflen(ls->buff), luaZ_buffer(ls->buff));
           ts = luaX_newstring(ls, luaZ_buffer(ls->buff),
                                   luaZ_bufflen(ls->buff));
           seminfo->ts = ts;
