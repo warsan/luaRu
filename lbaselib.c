@@ -496,6 +496,32 @@ static const luaL_Reg base_funcs[] = {
   /* placeholders */
   {LUA_GNAME, NULL},
   {"_VERSION", NULL},
+  /* add russian synonyms */
+  // {"assert", luaB_assert},
+  // {"collectgarbage", luaB_collectgarbage},
+  // {"dofile", luaB_dofile},
+  // {"error", luaB_error},
+  // {"getmetatable", luaB_getmetatable},
+  // {"ipairs", luaB_ipairs},
+  {"загрузить_файл", luaB_loadfile},
+  {"загрузить", luaB_load},
+  {"далее", luaB_next},
+  // {"pairs", luaB_pairs},
+  // {"pcall", luaB_pcall},
+  {"печать", luaB_print},
+  // {"rawequal", luaB_rawequal},
+  // {"rawlen", luaB_rawlen},
+  // {"rawget", luaB_rawget},
+  // {"rawset", luaB_rawset},
+  // {"select", luaB_select},
+  // {"setmetatable", luaB_setmetatable},
+  // {"tonumber", luaB_tonumber},
+  // {"tostring", luaB_tostring},
+  {"тип", luaB_type},
+  // {"xpcall", luaB_xpcall},
+  // /* placeholders */
+  // {LUA_GNAME, NULL},
+  {"_¬≈–—»я", NULL},
   {NULL, NULL}
 };
 
