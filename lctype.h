@@ -29,7 +29,7 @@
 #endif
 
 #define lislalcyr(c)	( (c>=224 && c<=255) || (c>=192 && c<=223) || c==168 || c==184 )
-// #define lislalcyr(c)	( (c>='–∞' && c<='—è') || (c>='–ê' && c<='–Ø') )
+// #define lislalcyr(c)	( (c>='‡' && c<='ˇ') || (c>='¿' && c<='ﬂ') )
 
 
 #if !LUA_USE_CTYPE	/* { */
@@ -94,3 +94,4 @@ LUAI_DDEC const lu_byte luai_ctype_[UCHAR_MAX + 2];
 #endif			/* } */
 
 #endif
+
