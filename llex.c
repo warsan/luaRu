@@ -47,10 +47,10 @@ static const char *const luaX_tokens [] = {
     "<number>", "<integer>", "<name>", "<string>"
 };
 static const char *const luaX_tokens_cyr [] = {
-    "Ë", "‚˚ıÓ‰", "‰ÂÎ‡Ú¸", "ËÌ‡˜Â", "ËÌ‡˜Â_ÂÒÎË",
-    "ÍÓÌÂˆ", "ÎÓÊ¸", "‰Îˇ", "ÙÛÌÍˆËˇ", "ÔÂÂÈÚË_Í", "ÂÒÎË",
-    "‚", "ÎÓÍ‡Î¸Ì‡ˇ", "ÔÛÒÚÓ", "ÌÂ", "ËÎË", "ÔÓ‚ÚÓËÚ¸",
-    "‚ÂÌÛÚ¸", "ÚÓ„‰‡", "ËÒÚËÌ‡", "ÔÓÍ‡_ÌÂ", "ÔÓÍ‡"
+    "–∏", "–≤—ã—Ö–æ–¥", "–¥–µ–ª–∞—Ç—å", "–∏–Ω–∞—á–µ", "–∏–Ω–∞—á–µ_–µ—Å–ª–∏",
+    "–∫–æ–Ω–µ—Ü", "–ª–æ–∂—å", "–¥–ª—è", "—Ñ—É–Ω–∫—Ü–∏—è", "–ø–µ—Ä–µ–π—Ç–∏_–∫", "–µ—Å–ª–∏",
+    "–≤", "–ª–æ–∫–∞–ª—å–Ω–∞—è", "–ø—É—Å—Ç–æ", "–Ω–µ", "–∏–ª–∏", "–ø–æ–≤—Ç–æ—Ä–∏—Ç—å",
+    "–≤–µ—Ä–Ω—É—Ç—å", "—Ç–æ–≥–¥–∞", "–∏—Å—Ç–∏–Ω–∞", "–ø–æ–∫–∞_–Ω–µ", "–ø–æ–∫–∞"
 };
 
 
@@ -83,7 +83,7 @@ void luaX_init (lua_State *L) {
     ts->extra = cast_byte(i+1);  /* reserved word */
   }
 
-  TString *e2 = luaS_newliteral(L, "_Œ –");  /* create env name */
+  TString *e2 = luaS_newliteral(L, "_√é√ä√ê");  /* create env name */
   luaC_fix(L, obj2gco(e2));  /* never collect this name */
   for (i=0; i<22; i++) {
     TString *ts = luaS_new(L, luaX_tokens_cyr[i]);
