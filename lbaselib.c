@@ -447,17 +447,17 @@ static int luaB_pcall (lua_State *L) {
 
 
 /*
-** Do a protected call with error handling. After 'lua_rotate', the
-** stack will have <f, err, true, f, [args...]>; so, the function passes
-** 2 to 'finishpcall' to skip the 2 first values when returning results.
+** Защищенный вызов с обработкой ошибок. После 'lua_rotate' 
+** стек будет иметь <f, err, true, f, [args...]>; поэтому функция проходит 
+** 2 до 'finishpcall', чтобы пропустить 2 первых значения при возврате результатов.
 */
 static int luaB_xpcall (lua_State *L) {
   int status;
   int n = lua_gettop(L);
-  luaL_checktype(L, 2, LUA_TFUNCTION);  /* check error function */
-  lua_pushboolean(L, 1);  /* first result */
-  lua_pushvalue(L, 1);  /* function */
-  lua_rotate(L, 3, 2);  /* move them below function's arguments */
+  luaL_checktype(L, 2, LUA_TFUNCTION);  /* функция проверки ошибок */
+  lua_pushboolean(L, 1);  /* первый результат */
+  lua_pushvalue(L, 1);  /* функция */
+  lua_rotate(L, 3, 2);  /* переместить их ниже аргументов функции */
   status = lua_pcallk(L, n - 2, LUA_MULTRET, 2, 2, finishpcall);
   return finishpcall(L, status, 2);
 }
@@ -503,12 +503,12 @@ static const luaL_Reg base_funcs[] = {
   // {"error", luaB_error},
   // {"getmetatable", luaB_getmetatable},
   // {"ipairs", luaB_ipairs},
-  {"���������_����", luaB_loadfile},
-  {"���������", luaB_load},
-  {"�����", luaB_next},
+  {"Загрузить файл", luaB_loadFile},
+  {"влить", luaB_load},
+  {"конец", luaB_next},
   // {"pairs", luaB_pairs},
   // {"pcall", luaB_pcall},
-  {"������", luaB_print},
+  {"печать", luaB_print},
   // {"rawequal", luaB_rawequal},
   // {"rawlen", luaB_rawlen},
   // {"rawget", luaB_rawget},
@@ -517,11 +517,11 @@ static const luaL_Reg base_funcs[] = {
   // {"setmetatable", luaB_setmetatable},
   // {"tonumber", luaB_tonumber},
   // {"tostring", luaB_tostring},
-  {"���", luaB_type},
+  {"тип", luaB_type},
   // {"xpcall", luaB_xpcall},
   // /* placeholders */
   // {LUA_GNAME, NULL},
-  {"_������", NULL},
+  {"нуль", NULL},
   {NULL, NULL}
 };
 
