@@ -356,15 +356,15 @@ static int luaB_load (lua_State *L) {
   size_t l;
   const char *s = lua_tolstring(L, 1, &l);
   const char *mode = luaL_optstring(L, 3, "bt");
-  int env = (!lua_isnone(L, 4) ? 4 : 0);  /* 'env' index or 0 if no 'env' */
-  if (s != NULL) {  /* loading a string? */
+  int env = (!lua_isnone(L, 4) ? 4 : 0);  /* 'env' индекс или 0 если не 'env' */
+  if (s != NULL) {  /* грузить строку? */
     const char *chunkname = luaL_optstring(L, 2, s);
     status = luaL_loadbufferx(L, s, l, chunkname, mode);
   }
-  else {  /* loading from a reader function */
+  else {  /* загрузка из функции чтения */
     const char *chunkname = luaL_optstring(L, 2, "=(load)");
     luaL_checktype(L, 1, LUA_TFUNCTION);
-    lua_settop(L, RESERVEDSLOT);  /* create reserved slot */
+    lua_settop(L, RESERVEDSLOT);  /* создать резервный слот */
     status = lua_load(L, generic_reader, NULL, chunkname, mode);
   }
   return load_aux(L, status, env);
@@ -374,7 +374,7 @@ static int luaB_load (lua_State *L) {
 
 
 static int dofilecont (lua_State *L, int d1, lua_KContext d2) {
-  (void)d1;  (void)d2;  /* only to match 'lua_Kfunction' prototype */
+  (void)d1;  (void)d2;  /* только для соответствия прототипу 'lua_Kfunction' */
   return lua_gettop(L) - 1;
 }
 
@@ -390,14 +390,14 @@ static int luaB_dofile (lua_State *L) {
 
 
 static int luaB_assert (lua_State *L) {
-  if (lua_toboolean(L, 1))  /* condition is true? */
-    return lua_gettop(L);  /* return all arguments */
+  if (lua_toboolean(L, 1))  /* условие верно? */
+    return lua_gettop(L);  /* вернуть все аргументы */
   else {  /* error */
-    luaL_checkany(L, 1);  /* there must be a condition */
-    lua_remove(L, 1);  /* remove it */
-    lua_pushliteral(L, "assertion failed!");  /* default message */
+    luaL_checkany(L, 1);  /* должно быть условие */
+    lua_remove(L, 1);  /* убери это */
+    lua_pushliteral(L, "не подтвердилось!");  /* сообщение по умолчанию */
     lua_settop(L, 1);  /* leave only message (default if no other one) */
-    return luaB_error(L);  /* call 'error' */
+    return luaB_error(L);  /* вызов 'error' */
   }
 }
 
@@ -412,24 +412,24 @@ static int luaB_select (lua_State *L) {
     lua_Integer i = luaL_checkinteger(L, 1);
     if (i < 0) i = n + i;
     else if (i > n) i = n;
-    luaL_argcheck(L, 1 <= i, 1, "index out of range");
+    luaL_argcheck(L, 1 <= i, 1, "индекс вне диапазона");
     return n - (int)i;
   }
 }
 
 
 /*
-** Continuation function for 'pcall' and 'xpcall'. Both functions
-** already pushed a 'true' before doing the call, so in case of success
-** 'finishpcall' only has to return everything in the stack minus
-** 'extra' values (where 'extra' is exactly the number of items to be
-** ignored).
+** Функция продолжения для «pcall» и «xpcall». Обе функции 
+** уже толкают «истину» перед тем, как вызвать, поэтому в случае успеха 
+** 'finishpcall' должен только вернуть все в стек минус 
+** «дополнительные» значения (где «extra» - это точное количество элементов, 
+** которые должны игнорироваться).
 */
 static int finishpcall (lua_State *L, int status, lua_KContext extra) {
   if (status != LUA_OK && status != LUA_YIELD) {  /* error? */
-    lua_pushboolean(L, 0);  /* first result (false) */
-    lua_pushvalue(L, -2);  /* error message */
-    return 2;  /* return false, msg */
+    lua_pushboolean(L, 0);  /* первый результат (false) */
+    lua_pushvalue(L, -2);  /* сообщение об ошибке */
+    return 2;  /* вернуть false, msg */
   }
   else
     return lua_gettop(L) - (int)extra;  /* return all results */
@@ -496,17 +496,18 @@ static const luaL_Reg base_funcs[] = {
   /* placeholders */
   {LUA_GNAME, NULL},
   {"_VERSION", NULL},
-  /* add russian synonyms */
+  /* добавить русские синонимы */
   // {"assert", luaB_assert},
   // {"collectgarbage", luaB_collectgarbage},
   // {"dofile", luaB_dofile},
   // {"error", luaB_error},
   // {"getmetatable", luaB_getmetatable},
   // {"ipairs", luaB_ipairs},
-  {"Загрузить файл", luaB_loadFile},
+  /* ищем самые короткие аналогии */ 
+  {"влить файл", luaB_loadfile},
   {"влить", luaB_load},
-  {"конец", luaB_next},
-  // {"pairs", luaB_pairs},
+  {"сел", luaB_next}, /* по аналогии "встал-сел" вместо "for-next" */ 
+  // {"пары", luaB_pairs},
   // {"pcall", luaB_pcall},
   {"печать", luaB_print},
   // {"rawequal", luaB_rawequal},
@@ -527,13 +528,13 @@ static const luaL_Reg base_funcs[] = {
 
 
 LUAMOD_API int luaopen_base (lua_State *L) {
-  /* open lib into global table */
+  /* открыть lib в глобальную таблицу */
   lua_pushglobaltable(L);
   luaL_setfuncs(L, base_funcs, 0);
-  /* set global _G */
+  /* задать глобал _G */
   lua_pushvalue(L, -1);
   lua_setfield(L, -2, LUA_GNAME);
-  /* set global _VERSION */
+  /* задать глобал _VERSION */
   lua_pushliteral(L, LUA_VERSION);
   lua_setfield(L, -2, "_VERSION");
   return 1;
